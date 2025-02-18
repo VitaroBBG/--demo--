@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calorie Tracker</title>
+    <title>卡路里追踪器</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -154,14 +154,14 @@
             let foodCalories = parseInt(document.getElementById("foodCalories").value, 10);
 
             if (!foodName || isNaN(foodCalories) || foodCalories < 1 || foodCalories > 5001) {
-                alert("Please enter a valid food name and calorie amount (1-5001).");
+                alert("请输入有效的食物名称和卡路里数量（1-5001）。");
                 return;
             }
 
             let mealDetails = document.getElementById(mealType + "-details");
             let newFoodItem = document.createElement("div");
             newFoodItem.classList.add("meal-item");
-            newFoodItem.innerHTML = `${foodName} - ${foodCalories} kcal 
+            newFoodItem.innerHTML = `${foodName} - ${foodCalories} 千卡 
                 <span class="delete-btn" onclick="deleteFood(this, ${foodCalories})">❌</span>`;
 
             mealDetails.appendChild(newFoodItem);
@@ -199,37 +199,37 @@
 </head>
 <body>
     <div class="container">
-        <h1>Calorie Tracker</h1>
-        <p>Calories Consumed: <strong id="calorieCount">0</strong> / <strong>2000</strong></p>
+        <h1>卡路里追踪器</h1>
+        <p>已摄入卡路里：<strong id="calorieCount">0</strong> / <strong>2000</strong></p>
         <div class="progress-container">
             <div class="progress-bar"></div>
         </div>
-        <button class="button" onclick="openModal()">Add Food</button>
-        <button class="button reset-button" onclick="resetCalories()">Reset</button>
+        <button class="button" onclick="openModal()">添加食物</button>
+        <button class="button reset-button" onclick="resetCalories()">重置</button>
         <div class="meal-list">
-            <h2>Today's Meals</h2>
-            <div class="meal-item" onclick="toggleFoodDetails('breakfast')">🍳 breakfast</div>
+            <h2>今天的餐点</h2>
+            <div class="meal-item" onclick="toggleFoodDetails('breakfast')">🍳 早餐</div>
             <div id="breakfast-details" class="food-details"></div>
-            <div class="meal-item" onclick="toggleFoodDetails('lunch')">🥗 lunch</div>
+            <div class="meal-item" onclick="toggleFoodDetails('lunch')">🥗 午餐</div>
             <div id="lunch-details" class="food-details"></div>
-            <div class="meal-item" onclick="toggleFoodDetails('dinner')">🍛 dinner</div>
+            <div class="meal-item" onclick="toggleFoodDetails('dinner')">🍛 晚餐</div>
             <div id="dinner-details" class="food-details"></div>
         </div>
     </div>
 
     <div id="foodModal" class="modal">
         <div class="modal-content">
-            <h2>Add Food</h2>
+            <h2>添加食物</h2>
             <select id="mealType">
-                <option value="breakfast">Breakfast</option>
-                <option value="lunch">Lunch</option>
-                <option value="dinner">Dinner</option>
+                <option value="breakfast">早餐</option>
+                <option value="lunch">午餐</option>
+                <option value="dinner">晚餐</option>
             </select>
-            <input type="text" id="foodName" placeholder="Food Name">
-            <input type="number" id="foodCalories" placeholder="Calories" min="1" max="5000">
+            <input type="text" id="foodName" placeholder="食物名称">
+            <input type="number" id="foodCalories" placeholder="卡路里" min="1" max="5000">
             <div class="modal-buttons">
-                <button class="button" onclick="addFood()">Add</button>
-                <button class="button" onclick="closeModal()">Close</button>
+                <button class="button" onclick="addFood()">添加</button>
+                <button class="button" onclick="closeModal()">关闭</button>
             </div>
         </div>
     </div>
