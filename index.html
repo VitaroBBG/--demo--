@@ -119,6 +119,60 @@
         let totalCalories = 0;
         const maxCalories = 2000;
 
+        const foodDatabase = {
+            "苹果": 52,
+            "香蕉": 96,
+            "米饭": 130,
+            "鸡胸肉": 165,
+            "鸡蛋": 155
+        };
+
+        const texts = {
+            en: {
+                title: "Calorie Tracker",
+                calorieText: "Calories Consumed:",
+                addFood: "Add Food",
+                reset: "Reset",
+                meals: "Today's Meals",
+                breakfast: "🍳 Breakfast",
+                lunch: "🥗 Lunch",
+                dinner: "🍛 Dinner",
+                foodNamePlaceholder: "Food Name",
+                foodCaloriesPlaceholder: "Calories",
+                addButton: "Add",
+                closeButton: "Close",
+                alert: "Please enter a valid food name and calorie amount (1-5001).",
+            },
+            zh: {
+                title: "卡路里追踪器",
+                calorieText: "已摄入卡路里：",
+                addFood: "添加食物",
+                reset: "重置",
+                meals: "今天的餐点",
+                breakfast: "🍳 早餐",
+                lunch: "🥗 午餐",
+                dinner: "🍛 晚餐",
+                foodNamePlaceholder: "食物名称",
+                foodCaloriesPlaceholder: "卡路里",
+                addButton: "添加",
+                closeButton: "关闭",
+                alert: "请输入有效的食物名称和卡路里数量（1-5001）。",
+            }
+        };
+
+        function switchLanguage(lang) {
+            document.querySelector('h1').textContent = texts[lang].title;
+            document.querySelector('#calorieCount').textContent = texts[lang].calorieText;
+            document.querySelector('.meal-list h2').textContent = texts[lang].meals;
+            document.querySelectorAll('.meal-item')[0].textContent = texts[lang].breakfast;
+            document.querySelectorAll('.meal-item')[1].textContent = texts[lang].lunch;
+            document.querySelectorAll('.meal-item')[2].textContent = texts[lang].dinner;
+            document.querySelector('#foodName').placeholder = texts[lang].foodNamePlaceholder;
+            document.querySelector('#foodCalories').placeholder = texts[lang].foodCaloriesPlaceholder;
+            document.querySelector('.modal-buttons .button').textContent = texts[lang].addButton;
+            document.querySelector('.modal-buttons .button:last-child').textContent = texts[lang].closeButton;
+        }
+
         function updateProgressBar() {
             let progress = Math.min((totalCalories / maxCalories) * 100, 100);
             let progressBar = document.querySelector(".progress-bar");
@@ -153,8 +207,18 @@
             let foodName = document.getElementById("foodName").value.trim();
             let foodCalories = parseInt(document.getElementById("foodCalories").value, 10);
 
-            if (!foodName || isNaN(foodCalories) || foodCalories < 1 || foodCalories > 5001) {
-                alert("请输入有效的食物名称和卡路里数量（1-5001）。");
+            if (!foodName) {
+                alert(texts[document.documentElement.lang].alert);
+                return;
+            }
+
+            if (!foodCalories && foodDatabase[foodName]) {
+                foodCalories = foodDatabase[foodName];
+                document.getElementById("foodCalories").value = foodCalories;
+            }
+
+            if (isNaN(foodCalories) || foodCalories < 1 || foodCalories > 5001) {
+                alert(texts[document.documentElement.lang].alert);
                 return;
             }
 
@@ -185,13 +249,27 @@
         }
 
         function saveData() {
-            localStorage.setItem("calories", totalCalories);
+            const foodData = {
+                totalCalories: totalCalories,
+                meals: {
+                    breakfast: document.getElementById("breakfast-details").innerHTML,
+                    lunch: document.getElementById("lunch-details").innerHTML,
+                    dinner: document.getElementById("dinner-details").innerHTML
+                }
+            };
+            localStorage.setItem("foodData", JSON.stringify(foodData));
         }
 
         function loadData() {
-            totalCalories = parseInt(localStorage.getItem("calories")) || 0;
-            document.getElementById("calorieCount").textContent = totalCalories;
-            updateProgressBar();
+            const savedData = JSON.parse(localStorage.getItem("foodData"));
+            if (savedData) {
+                totalCalories = savedData.totalCalories;
+                document.getElementById("calorieCount").textContent = totalCalories;
+                updateProgressBar();
+                document.getElementById("breakfast-details").innerHTML = savedData.meals.breakfast;
+                document.getElementById("lunch-details").innerHTML = savedData.meals.lunch;
+                document.getElementById("dinner-details").innerHTML = savedData.meals.dinner;
+            }
         }
 
         window.onload = loadData;
@@ -206,6 +284,8 @@
         </div>
         <button class="button" onclick="openModal()">添加食物</button>
         <button class="button reset-button" onclick="resetCalories()">重置</button>
+        <button class="button" onclick="switchLanguage('en')">English</button>
+        <button class="button" onclick="switchLanguage('zh')">中文</button>
         <div class="meal-list">
             <h2>今天的餐点</h2>
             <div class="meal-item" onclick="toggleFoodDetails('breakfast')">🍳 早餐</div>
